@@ -38,6 +38,7 @@ void drawBoard(vector<pair<int,int>> currentPositions, pair<int,int> food){
 
 void move(vector<pair<int,int>>& currentPositions){
     char movement;
+    rep:
     cin >> movement;
 
     int heady= currentPositions[0].first;
@@ -46,16 +47,36 @@ void move(vector<pair<int,int>>& currentPositions){
     switch (movement)
     {
     case 'w':
-        heady--;
+        if (heady!=0)
+        {
+            heady--;
+        }else{
+            goto rep;
+        }
         break;
     case 'a':
-        headx--;
+        if (headx!=0)
+        {
+            headx--;
+        }else{
+            goto rep;
+        }
         break;
     case 's':
-        heady++;
+        if (heady!=8)
+        {
+            heady++;
+        }else{
+            goto rep;
+        }
         break;
     case 'd':
-        headx++;
+        if (headx!=8)
+        {
+            headx++;
+        }else{
+            goto rep;
+        }
         break;
     default: return;
         break;
@@ -66,6 +87,7 @@ void move(vector<pair<int,int>>& currentPositions){
     }
 
     currentPositions[0]= {heady, headx};
+
 }
 
 pair<int,int> Food(){
@@ -78,7 +100,7 @@ pair<int,int> Food(){
     return(food);
 }
 
-pair<int,int> foodCheck(vector<pair<int,int>> currentPositions, pair<int,int> food){
+pair<int,int> foodCheck(vector<pair<int,int>>& currentPositions, pair<int,int> food, pair<int,int> tail){
     bool isFood = false;
     for (auto& p : currentPositions) {
             if (p.first == food.first && p.second == food.second) {
@@ -88,6 +110,7 @@ pair<int,int> foodCheck(vector<pair<int,int>> currentPositions, pair<int,int> fo
         }
     if (isFood)
     {
+        currentPositions.push_back(tail);
         food = Food();
         return food;
     }else{
@@ -99,10 +122,29 @@ pair<int,int> foodCheck(vector<pair<int,int>> currentPositions, pair<int,int> fo
 int main(){
     vector<pair<int,int>> currentPositions = {{1,0},{0,0}};
     pair<int, int> food = Food();
-    while(true){
-        food = foodCheck(currentPositions,food);
+    pair<int, int> tail = currentPositions.back();
+    bool isDead = false;
+    int counter = 0;
+    while(!isDead){ 
+        counter = 0;
+        food = foodCheck(currentPositions,food,tail);
+        tail = currentPositions.back();
         drawBoard(currentPositions,food);
         move(currentPositions);
+        for (auto& p : currentPositions) {
+            if (p == currentPositions[0]) {
+                counter++;
+                if (counter==2)
+                {
+                    isDead = true;
+                    break;
+                }
+                
+                
+                
+            }
+        }
+        
     }
     
     return 0;
