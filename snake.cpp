@@ -22,12 +22,12 @@ void drawBoard(vector<pair<int,int>> currentPositions, pair<int,int> food){
             }
             if (i == food.first && j == food.second)
             {
-                cout << "F";
+                cout << "\033[31mF\033[0m";
             }else{
                 if (isSnake)
-                    cout << "S";
+                    cout << "\033[32mS\033[0m";
                 else
-                    cout << "X";
+                    cout << "*";
             }
             
             
@@ -97,6 +97,7 @@ pair<int,int> Food(){
     int j;
     j = (rand()%8)+1;
     pair<int,int> food = {i,j};
+    
     return(food);
 }
 
@@ -111,7 +112,20 @@ pair<int,int> foodCheck(vector<pair<int,int>>& currentPositions, pair<int,int> f
     if (isFood)
     {
         currentPositions.push_back(tail);
+        again:
         food = Food();
+        bool isBadSpawn = false;
+        for (auto& p : currentPositions) {
+            if (p.first == food.first && p.second == food.second) {
+                isBadSpawn = true;
+                break;
+            }
+        }
+        if (isBadSpawn)
+        {
+            goto again;
+        }
+        
         return food;
     }else{
         return food;
